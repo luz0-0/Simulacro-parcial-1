@@ -73,11 +73,10 @@ public function getEstadoMoto() {
 
 public function darPrecioVenta($añoActual) {
     if (!$this->estadoMoto) {
-        return 0;
+        return -1;
     }
-
     $diferenciaAños = $añoActual - $this->añoFabricacion;
-    $costoConIncremento = $this->costoMoto * pow((1 + $this->porcentajeIncrementoAnual / 100), $diferenciaAños);
+    $costoConIncremento = $this->costoMoto + ($this->costoMoto * ($diferenciaAños * $this->porcentajeIncrementoAnual / 100));
     return $costoConIncremento;
 }
 
