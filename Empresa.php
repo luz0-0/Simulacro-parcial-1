@@ -1,155 +1,72 @@
 <?php
-class Empresa {
-private string $denominacion;
-private string $direccion;
-private array $coleccionClientes = [];
-private array $coleccionMotos;
-private array $coleccionVentas;
+class Cliente {
+private string $nombre;
+private string $apellido;
+private string $tipoDocumento;
+private int $numeroDocumento;
+private bool $estadoCliente;
 
 public function __construct(
-    string $denominacion, 
-    string $direccion, 
-    array $coleccionClientes = [], 
-    array $coleccionMotos = [], 
-    array $coleccionVentas = []
-) {
-    $this->denominacion = $denominacion;
-    $this->direccion = $direccion;
-    $this->coleccionClientes = $coleccionClientes;
-    $this->coleccionMotos = $coleccionMotos;
-    $this->coleccionVentas = $coleccionVentas;
+    string $nombre, 
+    string $apellido, 
+    string $tipoDocumento, 
+    int $numeroDocumento, 
+    bool $estadoCliente
+    ) {
+        $this->nombre = $nombre;
+        $this->apellido = $apellido;
+        $this->tipoDocumento = $tipoDocumento;
+        $this->numeroDocumento = $numeroDocumento;
+        $this->estadoCliente = $estadoCliente;
 }
 
-public function setDenominacion(string $denominacion) {
-    $this->denominacion = $denominacion;
-}
+public function setNombre($nombre) {
+    $this->nombre= $nombre;
+    }
 
-public function setDireccion(string $direccion) {
-    $this->direccion = $direccion;
-}
+public function setApellido($apellido) {
+    $this->apellido = $apellido;
+    }
 
-public function setColeccionClientes($coleccionClientes) {
-    $this->coleccionClientes = $coleccionClientes;
+public function setTipoDocumento($tipoDocumento) {
+    $this->tipoDocumento = $tipoDocumento;
+    }
 
-}
+public function setNumeroDocumento($numeroDocumento) {
+    $this->numeroDocumento = $numeroDocumento;
+    }
 
-public function setColeccionMotos($coleccionMotos) {
-    $this->coleccionMotos = $coleccionMotos;
-
-}
-
-public function setColeccionVentas($coleccionVentas) {
-    $this->coleccionVentas = $coleccionVentas;
-
-}
-
-public function getDenominacion() {
-    return $this->denominacion;
-
-}
-
-public function getDireccion() {
-    return $this->direccion;
-
-}
-
-public function getColeccionClientes() {
-    return $this->coleccionClientes;
-
-}
-
-public function getColeccionMotos() {
-    return $this->coleccionMotos;
-
-}
-
-public function getColeccionVentas() {
-    return $this->coleccionVentas;
-
-}
-
-public function retornarMoto($codigoMoto) {
-    foreach ($this->coleccionMotos as $moto) {
-        if ($moto instanceof Moto && $moto->getCodigoMoto() === $codigoMoto) {
-            return $moto;
+    public function setEstadoCliente($estadoCliente) {
+        $this->estadoCliente = $estadoCliente;
         }
-    }
-    return null;
+
+public function getNombre() {
+    return $this->nombre;
 }
 
-public function registrarVenta($colCodigosMoto, $objCliente) {
-    if (!$objCliente->getEstadoCliente()) {
-        return "Error. Cliente inactivo.";
-    }
-
-    $motosVendidas = [];
-    $importeFinal = 0;
-
-    foreach ($colCodigosMoto as $codigoMoto) {
-        $moto = $this->retornarMoto($codigoMoto);
-
-        if ($moto !== null && $moto->getEstadoMoto()) {
-            $precioVenta = $moto->darPrecioVenta(date("Y"));
-            $importeFinal += $precioVenta;
-            $motosVendidas[] = $moto;
-            $moto->setEstadoMoto(false);
-        }
-    }
-
-    if (count($motosVendidas) === 0) {
-        return "No hay motos disponibles.";
-    }
-
-    $nuevaVenta = new Venta(
-        count($this->coleccionVentas) + 1,
-        date("Y-m-d"),
-        $objCliente,
-        $motosVendidas,
-        $importeFinal
-    );
-
-    $this->coleccionVentas[] = $nuevaVenta;
-
-    return $importeFinal;
+public function getApellido() {
+    return $this->apellido;
 }
 
-public function retornarVentasXCliente($tipo, $numDoc) {
-    $ventasCliente = [];
+public function getTipoDocumento() {
+    return $this->tipoDocumento;
+}
 
-    foreach ($this->coleccionVentas as $venta) {
-        $cliente = $venta->getCliente();
-        if ($cliente->getTipoDocumento() === $tipo && $cliente->getNumeroDocumento() === $numDoc) {
-            $ventasCliente[] = $venta;
-        }
-    }
+public function getNumeroDocumento() {
+    return $this->numeroDocumento;
+}
 
-    return $ventasCliente;
+public function getEstadoCliente() {
+    return $this->estadoCliente;
 }
 
 public function __toString() {
-    $resultado = "Denominación:\n" . $this->denominacion . "\n";
-    $resultado .= "Dirección:\n" . $this->direccion . "\n";
-    $resultado .= "Clientes:\n" . "\n";
-
-    foreach ($this->coleccionClientes as $cliente) {
-        $resultado .= $cliente->__toString() . "\n";
-    }
-
-    $resultado .= "Motos:\n \n";
-    foreach ($this->coleccionMotos as $moto) {
-        $resultado .= $moto->__toString() . "\n";
-    }
-
-    $resultado .= "Ventas:\n \n";
-    foreach ($this->coleccionVentas as $venta) {
-        $resultado .= $venta->__toString() . "\n";
-    }
-
-    return $resultado;
+    return "Nombre: " . $this->nombre . "\n" .
+           "Apellido: " . $this->apellido . "\n" .
+           "Tipo de documento: " . $this->tipoDocumento . "\n" .
+           "Número de documento: " . $this->numeroDocumento . "\n" .
+           "Estado del cliente: " . ($this->estadoCliente ? 'Activo' : 'Inactivo');
 }
-
-
-
 
 
 }
